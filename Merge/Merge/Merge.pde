@@ -29,15 +29,18 @@ void setup() {
       {
          color c1 = img1.get(i,j);
          color c2 = img2.get(i,j);
-         if(c1 == color(255,255,255) || c2 == color(255,255,255)) continue;
-         
-         if(dist(red(c1), green(c1), blue(c1),red(c2), green(c2), blue(c2)) <=16)
-         {
-           img3.set(i,j,color(((red(c1)+red(c2))/2),((green(c1)+green(c2))/2),((blue(c1)+blue(c2))/2)));
+                    img3.set(i,j,color(255,255,255));
+
+         if(c1 == color(255,255,255) || c2 == color(255,255,255)) {
+           continue;
          }
+         
+         
+           img3.set(i,j,color(((red(c1)+red(c2))/2),((green(c1)+green(c2))/2),((blue(c1)+blue(c2))/2)));
+         
       }
     }
-    img3.save("C:\\Users\\lacer\\OneDrive\\Desktop\\Merge\\image" + index +"_" + (index + 1)+".png")
+    img3.save("C:\\Users\\lacer\\OneDrive\\Desktop\\Merge\\image" + index +"_" + (index + 1)+".png");
     index += 2;
   } else {
     // Reiniciar o índice se chegar ao final
