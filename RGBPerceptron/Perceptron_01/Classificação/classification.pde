@@ -1,6 +1,6 @@
 import java.io.File;
 
-PrintWriter output;
+//PrintWriter output;
 
 PImage img;
 PImage imgP;
@@ -9,7 +9,6 @@ PImage imgN;
 void setup() {
   size(1920, 620);
   
-  // Diretório contendo as imagens
   String folderPath = "C:\\Users\\lacer\\OneDrive\\Desktop\\HeadPngs";
   String exitPath = "C:\\Users\\lacer\\OneDrive\\Desktop\\1Heads";
   File folder = new File(folderPath);
@@ -36,7 +35,7 @@ void setup() {
     imgP = loadImage(folderPath + "\\" + fileName);
     imgN = loadImage(folderPath + "\\" + fileName);
     
-    output = createWriter(exitPath + "\\Z" + fileName.replace(".png", ".txt"));
+    //output = createWriter(exitPath + "\\Z" + fileName.replace(".png", ".txt"));
 
     for (int i = 0; i < img.width; i++) {
       for (int j = 0; j < img.height; j++) {
@@ -48,7 +47,7 @@ void setup() {
         float newS = (w1 * r) + (w2 * g) + (w3 * b) + bias;
         if (newS > 0) {
           imgN.set(i, j, color(255, 255, 255));
-           output.println(i+"\t"+j+"\t"+id+"\t"+r+"\t"+g+"\t"+b);
+           //output.println(i+"\t"+j+"\t"+id+"\t"+r+"\t"+g+"\t"+b);
 
         } else {
           imgP.set(i, j, color(255, 255, 255));
@@ -56,8 +55,8 @@ void setup() {
       }
      
     }
-     output.flush();
-      output.close();
+  //   output.flush();
+    //  output.close();
       id++;
     imgP.save(exitPath + "\\" + fileName.replace(".png", "_P.png"));
   }
