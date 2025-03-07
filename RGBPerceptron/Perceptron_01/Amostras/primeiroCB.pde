@@ -14,9 +14,9 @@ float sqr(int x) {
   int contn = 0;
   
 void setup() {
-  size(400, 400);
   folder = new File(folderPath);
   images = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".png"));
+  output = createWriter("C:/Users/lacer/Documents/Perceptrons/RGBPerceptron/Perceptron_01/Treinamento/processingSaveData.txt");
   
   if (images == null || images.length == 0) {
     println("Nenhuma imagem encontrada na pasta.");
@@ -39,7 +39,6 @@ void processImage(File imageFile) {
     return;
   }
   
-  output = createWriter("C:/Users/lacer/Documents/Perceptrons/RGBPerceptron/Perceptron_01/Treinamento/" + imageFile.getName() + "_data.txt");
   
   color c;
   float r = 0, g = 255, b = 255;
@@ -73,7 +72,9 @@ void processImage(File imageFile) {
         contp++;
         output.println(r + "\t" + g + "\t" + b + "\t+1");
         cont++;
+        
       }
+      //println(cont + "\t" + imageFile.getName());
     }
     
     println("contn == " + contn);
@@ -82,11 +83,5 @@ void processImage(File imageFile) {
     output.flush();
     output.close();
     break;
-  }
-}
-
-void draw() {
-  if (img != null) {
-    image(img, 0, 0);
   }
 }
