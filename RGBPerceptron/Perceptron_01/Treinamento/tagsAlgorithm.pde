@@ -11,7 +11,7 @@ void setup(){
   Float w2 = 127.0;
   Float w3 = 127.0;
   Float s = 0.0;
-  int epocas = 500;
+  int epocas = 1500;
   int count = 0;
   String[] linhas;
   color co;
