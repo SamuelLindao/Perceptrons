@@ -6,3 +6,6 @@ A horizontal perceptron that removes the layers of non-interest horizontally, by
 A vertical perceptron that removes the layers of non-interest vertically, by position.
 An image processing responsible for merging the images so that 2 images come together and form 1 lighter one. Enabling a more optimized development.
 An image processing responsible for checking the skin layers (the edges of the images). Enabling an even more optimized visualization.
+
+
+Results:
