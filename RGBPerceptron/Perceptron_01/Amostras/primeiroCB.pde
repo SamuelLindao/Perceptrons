@@ -2,86 +2,93 @@ import java.io.File;
 
 PImage img;
 PrintWriter output;
-String folderPath = "C:/Users/lacer/Documents/Perceptrons/RGBPerceptron/Perceptron_01/Amostras/imagem"; // Defina o caminho da pasta aqui
-int maxImages = 5; // Defina o número máximo de imagens a processar
+
+String folderPath = "C:\\Users\\lacer\\OneDrive\\Desktop\\Perceptrons\\Perceptrons\\RGBPerceptron\\Perceptron_01\\Amostras\\VisibleData";
+String outputFolder = "C:\\Users\\lacer\\OneDrive\\Desktop\\Perceptrons\\Perceptrons\\RGBPerceptron\\Perceptron_01\\Amostras\\FilesTXT\\";
+int blocoTamanho = 50;
+int totalDadosPorBloco = 4096;
+
 File folder;
 File[] images;
 
 float sqr(int x) {
   return x * x;
 }
-  int contp = 0;
-  int contn = 0;
-  
+
 void setup() {
   folder = new File(folderPath);
   images = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".png"));
-  output = createWriter("C:/Users/lacer/Documents/Perceptrons/RGBPerceptron/Perceptron_01/Treinamento/processingSaveData.txt");
-  
+
   if (images == null || images.length == 0) {
     println("Nenhuma imagem encontrada na pasta.");
     exit();
   }
-  
-  int imagesToProcess = min(images.length, maxImages);
-  
-  for (int imgIndex = 0; imgIndex < imagesToProcess; imgIndex++) {
-    processImage(images[imgIndex]);
-  }
-  
-  exit();
-}
 
-void processImage(File imageFile) {
-  img = loadImage(imageFile.getAbsolutePath());
-  if (img == null) {
-    println("Erro ao carregar: " + imageFile.getName());
-    return;
-  }
-  
-  
-  color c;
-  float r = 0, g = 255, b = 255;
-  float n = 0;
+  // Ordena as imagens por nome para garantir consistência
+  java.util.Arrays.sort(images);
 
-  float dv = 0;
-  int cont = 0;
-  int distPar = 16;
-  println("Processando: " + imageFile.getName());
-  int totalDados = 1520000;
+  int totalBlocos = (int) ceil(images.length / float(blocoTamanho));
 
-  while (true) {
-    for (int x = 0; x < img.width * img.height; x++) {
-      if (cont == totalDados) break;
-      int i = (int) random(img.width);
-      int j = (int) random(img.height);
-      c = img.get(i, j);
-      r = red(c);
-      g = green(c);
-      b = blue(c);
+  println("Total de blocos: " + totalBlocos);
 
-      dv = dist(r, g, b, 0, 6, 23);
+  for (int bloco = 0; bloco < totalBlocos; bloco++) {
+    String outputPath = outputFolder + "processingSaveData_" + bloco + "_.txt";
+    output = createWriter(outputPath);
 
-      if (dv < distPar && contn < totalDados / 2) {
-        contn++;
-        output.println(r + "\t" + g + "\t" + b + "\t-1");
-        cont++;
-      }
-
-      if (dv >= distPar && contp < totalDados / 2) {
-        contp++;
-        output.println(r + "\t" + g + "\t" + b + "\t+1");
-        cont++;
-        
-      }
-      //println(cont + "\t" + imageFile.getName());
-    }
+    println("Processando bloco: " + bloco);
     
-    println("contn == " + contn);
-    println("contp == " + contp);
+    int contn = 0;
+    int contp = 0;
+    int cont = 0;
+    int distPar = 16;
+
+    for (int i = bloco * blocoTamanho; i < min((bloco + 1) * blocoTamanho, images.length); i++) {
+      File imageFile = images[i];
+      img = loadImage(imageFile.getAbsolutePath());
+
+      if (img == null) {
+        println("Erro ao carregar: " + imageFile.getName());
+        continue;
+      }
+
+      println("  → Imagem: " + imageFile.getName());
+
+      color c;
+      float r, g, b;
+      float dv;
+
+      while (cont < totalDadosPorBloco) {
+        int x = (int) random(img.width);
+        int y = (int) random(img.height);
+
+        c = img.get(x, y);
+        r = red(c);
+        g = green(c);
+        b = blue(c);
+
+        dv = dist(r, g, b, 0, 6, 23);
+
+        if (dv < distPar && contn < totalDadosPorBloco / 2) {
+          contn++;
+          cont++;
+          output.println(r + "\t" + g + "\t" + b + "\t-1");
+        } else if (dv >= distPar && contp < totalDadosPorBloco / 2) {
+          contp++;
+          cont++;
+          output.println(r + "\t" + g + "\t" + b + "\t+1");
+        }
+
+        // Para caso esgotar dados da imagem atual e precisar ir pra próxima
+        if ((contn >= totalDadosPorBloco / 2) && (contp >= totalDadosPorBloco / 2)) break;
+      }
+    }
 
     output.flush();
     output.close();
-    break;
+
+    println("  ✔ Bloco " + bloco + " finalizado: " + cont + " amostras.");
   }
+
+  println("Todos os blocos foram processados.");
+  exit();
 }
